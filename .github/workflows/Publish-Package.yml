@@ -1,7 +1,5 @@
 name: Publish the code in the main branch to github packages
-on:
-  workflow_dispatch: 
-
+on: push
 jobs:
   publish:
     runs-on: ubuntu-latest
