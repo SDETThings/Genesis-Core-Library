@@ -17,8 +17,8 @@
   <distributionManagement>
     <repository>
       <id>github</id>
-      <name>Genesis core library package</name>
-      <url>https://maven.pkg.github.com/SDETThings/Genesis-Core-Library</url>
+      <name>Github Packages</name>
+      <url>https://maven.pkg.github.com/kunalbiswas92/Genesis-Core-Library</url>
     </repository>
   </distributionManagement>
 
@@ -87,8 +87,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>21</source>
-          <target>21</target>
+          <source>8</source>
+          <target>8</target>
         </configuration>
       </plugin>
     </plugins>
