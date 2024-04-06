@@ -4,7 +4,7 @@ public class APIRequestTypes {
     public enum types {
 
 
-        
+
 
     }
 }
