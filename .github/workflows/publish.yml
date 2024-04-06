@@ -15,4 +15,4 @@ jobs:
       - name: Publish the pacakge
         run: mvn --batch-mode deploy
         env:
-          GITHUB_TOKEN: ${{ secret.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
