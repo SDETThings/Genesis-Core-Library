@@ -18,7 +18,7 @@
     <repository>
       <id>github</id>
       <name>Genesis core library package</name>
-      <url>https://maven.pkg.github.com/kunalbiswas92/Genesis-Core-Library</url>
+      <url>https://maven.pkg.github.com/SDETThings/Genesis-Core-Library</url>
     </repository>
   </distributionManagement>
 
