@@ -2,6 +2,7 @@ package DataHandlerUtils;
 
 import LogUtils.LibraryLoggingUtils;
 import com.google.gson.*;
+import org.openqa.selenium.json.Json;
 
 import java.util.*;
 
@@ -194,14 +195,14 @@ public class JsonCompareUtils {
      * @param currentKey This is the current key ( usually passed as "" - empty string ) to the function that is used to store the current key during iteration through the json structure.
      * @return  returns a jsonElement object containing the actual value of the key provided with in the json.
      */
-    public synchronized JsonElement getValueFromComplexJson(JsonElement jsonElement,String key,String currentKey) {
+    public synchronized JsonElement getValueFromComplexJson(JsonElement jsonElement,String key,String currentKey,int j ,String... nestedKey) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         libraryLoggingUtils = new LibraryLoggingUtils();
+        String nestedKeys = nestedKey[0];
         try {
             if(!key.equals(currentKey)){
                 JsonElement value = null;
-                if(jsonElement.isJsonObject())
-                {
+                if(jsonElement.isJsonObject()) {
                     JsonObject actualObject = jsonElement.getAsJsonObject();
                     Set<Map.Entry<String,JsonElement>> entries = actualObject.entrySet();
                     Iterator itr = entries.iterator();
@@ -210,9 +211,23 @@ public class JsonCompareUtils {
                         Map.Entry<String,JsonElement> entry = (Map.Entry) itr.next();
                         String currentKey1 = entry.getKey();
                         JsonElement expectedValue = entry.getValue();
-                        getValueFromComplexJson(expectedValue,key,currentKey1);
+                        /*if(key.contains(".") && expectedValue.isJsonObject() && expectedValue.getAsJsonObject().has(key.split("\\.")[key.split("\\.").length-1]))
+                        {
+                            getValueFromComplexJson(expectedValue,key,key.split("\\.")[key.split("\\.").length-1]);
+                        }
+                        else{*/
+                        if(nestedKey.length==0)
+                        {
+                            getValueFromComplexJson(expectedValue,key,currentKey1,j,nestedKeys);
+                        }else if(nestedKey.length>0 && nestedKey[0].split("\\.")[j].equals(currentKey1)){
+                            getValueFromComplexJson(expectedValue,key,nestedKey[0].split("\\.")[j],j,nestedKeys);
+                            j++;
+                        }else{
+                            getValueFromComplexJson(expectedValue,key,currentKey1,j,nestedKeys);
+                        }
                     }
-                } else if (jsonElement.isJsonArray()) {
+                }
+                else if (jsonElement.isJsonArray()) {
                     JsonObject element =null;
                     JsonArray nestedJsonArray;
                     JsonArray jsonArray = jsonElement.getAsJsonArray();
@@ -223,7 +238,7 @@ public class JsonCompareUtils {
                             if(!jsonArray.get(i).isJsonPrimitive())
                             {
                                 element = jsonArray.get(i).getAsJsonObject();
-                                getValueFromComplexJson(element,key,currentKey+"["+i+"]");
+                                getValueFromComplexJson(element,key,currentKey+"["+i+"]",i);
                             }
                         }else {
                             nestedJsonArray = jsonArray.get(i).getAsJsonArray();
@@ -231,13 +246,96 @@ public class JsonCompareUtils {
                         }
                     }
                 }
-            }else {
+            }
+            else if(key.equals(currentKey) && !nestedKeys.contains(".")){
                 keyValue.put(key,jsonElement);
             }
         } catch (Exception e) {
             libraryLoggingUtils.getCurrentMethodException(className,methodName,e);
         }
-        return jsonElement;
+        return keyValue.get(key);
+    }
+    public synchronized JsonElement getValueFromComplexJson(JsonElement jsonElement,String key,String currentKey) {
+        String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
+        libraryLoggingUtils = new LibraryLoggingUtils();
+        if(!key.contains("\\."))
+        {
+            try {
+                if (!key.equals(currentKey)) {
+                    JsonElement value = null;
+                    if (jsonElement.isJsonObject()) {
+                        JsonObject actualObject = jsonElement.getAsJsonObject();
+                        Set<Map.Entry<String, JsonElement>> entries = actualObject.entrySet();
+                        Iterator itr = entries.iterator();
+                        while (itr.hasNext()) {
+                            Map.Entry<String, JsonElement> entry = (Map.Entry) itr.next();
+                            String currentKey1 = entry.getKey();
+                            JsonElement expectedValue = entry.getValue();
+                            getValueFromComplexJson(expectedValue, key, currentKey1);
+
+                        }
+                    } else if (jsonElement.isJsonArray()) {
+                        JsonObject element = null;
+                        JsonArray nestedJsonArray;
+                        JsonArray jsonArray = jsonElement.getAsJsonArray();
+                        for (int i = 0; i < jsonArray.size(); ++i) {
+                            if (!jsonArray.get(i).isJsonArray()) {
+                                if (!jsonArray.get(i).isJsonPrimitive()) {
+                                    element = jsonArray.get(i).getAsJsonObject();
+                                    getValueFromComplexJson(element, key, currentKey + "[" + i + "]", i);
+                                }
+                            } else {
+                                nestedJsonArray = jsonArray.get(i).getAsJsonArray();
+                                getValueFromComplexJson(nestedJsonArray, key, currentKey + "[" + i + "]");
+                            }
+                        }
+                    }
+                } else {
+                    keyValue.put(key, jsonElement);
+                }
+            } catch (Exception e) {
+                libraryLoggingUtils.getCurrentMethodException(className, methodName, e);
+            }
+        }
+        else{
+            String[] parts = key.split("\\.");
+            for(int i=0;i<parts.length;i++)
+            {
+                if(parts[i].contains("["))
+                {
+                    key = getJsonArrayNameFromPath(parts[i]);
+                }else{
+                    key=parts[i];
+                }
+                for(Map.Entry<String, JsonElement> entry: jsonElement.getAsJsonObject().entrySet())
+                {
+                    if(entry.getKey().equalsIgnoreCase(key));
+                }
+            }
+        }
+        return keyValue.get(key);
+    }
+    public synchronized  String getJsonArrayNameFromPath(String array){
+        return  array.substring(0, array.indexOf("["));
+    }
+    public synchronized  JsonElement getValueFromComplexNestedPayload(JsonObject jsonObject, String path){
+        String[] parts = path.split("\\.");
+        JsonElement currentElement = jsonObject;
+
+        for (String part : parts) {
+            if (part.contains("[") && part.contains("]")) {
+                // Handle array index
+                String arrayName = part.substring(0, part.indexOf("["));
+                int index = Integer.parseInt(part.substring(part.indexOf("[") + 1, part.indexOf("]")));
+                JsonArray jsonArray = currentElement.getAsJsonObject().getAsJsonArray(arrayName);
+                currentElement = jsonArray.get(index);
+            } else {
+                // Handle object key
+                currentElement = currentElement.getAsJsonObject().get(part);
+            }
+        }
+
+        return currentElement;
     }
     /**
      * extractSpecificArrayElementFromResponseObject method is used to get the specific array element from a json structure
