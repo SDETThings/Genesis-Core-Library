@@ -41,11 +41,11 @@ public class ExtentReport {
      * @param pattern This is the timestamp format inside the file.
      * @return Returns report name as string
      */
-    public static String getReportNameWithTimeStamp(String pattern ) {
+    public static String getReportNameWithTimeStamp(String testcase , String pattern ) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         String timeStamp = now.format(formatter);
-        String reportName = "ExtentReport"+timeStamp+".html";
+        String reportName = testcase +"_REPORT_"+timeStamp+".html";
         return reportName;
 }
 
