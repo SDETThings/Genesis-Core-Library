@@ -1,5 +1,5 @@
 name: publish package
-on: 
+on:
   workflow_dispatch
 jobs:
   publish:
@@ -16,4 +16,4 @@ jobs:
       - name: Publish the pacakge
         run: mvn --batch-mode deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
