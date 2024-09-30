@@ -18,18 +18,15 @@ import java.util.zip.ZipOutputStream;
  * FileUtils class contains the methods for performing file related operations
  */
 public class FileUtils {
-
     LibraryLoggingUtils libraryLoggingUtils;
     String className = Thread.currentThread().getStackTrace()[1].getClassName();
-    ThreadLocal<WebDriver> tl;
     /**
      * writeFileToLocation method is used to write a file to a specific location.
      * @param filePathToBeWritten Actual existing file path which is to be written in another folder.
      * @param destinationFolderPath folder in which existing file is to be written into.
      * @return newlyWrittenFilePath This is the path of the newly written file ( if written successfully else returns null).
      */
-    public synchronized String writeFileToLocation(String filePathToBeWritten,String destinationFolderPath)
-    {
+    public synchronized String writeFileToLocation(String filePathToBeWritten,String destinationFolderPath) {
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         libraryLoggingUtils = new LibraryLoggingUtils();
         String newlyWrittenFilePath = null;
@@ -110,7 +107,6 @@ public class FileUtils {
         }
         return filePath;
     }
-
     /**
      * createZipFolder Method is used to create zip file of existing folder
      * @param testCaseResultsFolder The path of the actual test case folder which needs to be zipped ( Example : ./src/test/resources/TestCaseResults/TC002_20231018125321 )
@@ -156,7 +152,6 @@ public class FileUtils {
             zipOut.closeEntry();
         }
     }
-
     /**
      * convertAndWriteFileToBase64 Method is used to convert zip file to Base64 encoded format and write to new location     *
      * @param testCaseResultsZipFolder This will accept folder path for the zip file to be encoded
@@ -250,7 +245,7 @@ public class FileUtils {
         }
 
     }
-// used in above function addFolderToZip
+    // used in above function addFolderToZip
     public synchronized void addFileToZip(File file, String entryName, ZipOutputStream zos) {
         System.out.println("entryName:" + entryName);
         try (
