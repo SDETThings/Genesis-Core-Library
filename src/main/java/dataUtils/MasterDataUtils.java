@@ -150,8 +150,7 @@ public class MasterDataUtils {
      * @param typesList This is actual JsonArray which contains the data
      * @return Returns a JsonObject containing the required front end data.
      */
-    public synchronized JsonArray accessMobileData(String testCaseId ,int i , JsonArray typesList)
-    {
+    public synchronized JsonArray accessMobileData(String testCaseId ,int i , JsonArray typesList) {
         JsonArray mobileDataFields = null;
         {
             JsonElement APItype= typesList.get(i);
@@ -296,8 +295,7 @@ public class MasterDataUtils {
      * @see #accessMainframeData(String, int, JsonArray, String)  This method is called to get the actual mainframe JsonObject elements
      * @return Returns a JsonObject containing the required mainframe data.
      */
-    public synchronized  JsonObject accessMainframeMasterData(String testCaseId, String component , JsonObject universalMasterDataDriverLocalObject, String Day)
-    {
+    public synchronized  JsonObject accessMainframeMasterData(String testCaseId, String component , JsonObject universalMasterDataDriverLocalObject, String Day) {
         JsonObject outputDataFields = null;
         JsonArray testCaseList = universalMasterDataDriverLocalObject.getAsJsonArray("TEST_CASES");
         for(JsonElement testCase : testCaseList)
@@ -364,7 +362,6 @@ public class MasterDataUtils {
 
         return outputDataFields;
     }
-
     /**
      * accessMainframeMasterData Method is used to access data against a test case's WEB/MOBILE component from it's corresponding Master data json file
      * @param testCaseId This is testng method name

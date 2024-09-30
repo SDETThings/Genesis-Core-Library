@@ -15,8 +15,7 @@ public class LibraryLoggingUtils {
      * @param methodName This is the name of the currently running method
      * @param actualException This is the actual exception caught and passed from the try-catch block of currently running method
      */
-    public synchronized void getCurrentMethodException(String className,String methodName,Exception actualException,String... message)
-    {
+    public synchronized void getCurrentMethodException(String className,String methodName,Exception actualException,String... message) {
         if(message.length>0)
         {
             logger.error("Error encountered while running method: " + className + "." + methodName + ":" +message+" , Exception is as below :");

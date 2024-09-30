@@ -1,19 +1,11 @@
 package BasicUtils;
 
 import LogUtils.LibraryLoggingUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * CommonMethods class contains the methods for basic java operations and function which are helpful to testers ( this class can be modiifed as per project requirement )
@@ -27,8 +19,7 @@ public class CommonMethods {
      * @param timeZone This is the optional argument for timeZone ( Eg: UTC ).
      * @return  formattedTimeStamp This is the formatted date_timestamp as per the user defined format.
      */
-    public synchronized String getCurrentTimeStamp(String timeStampFormat,String... timeZone ) // tested OK
-    {
+    public synchronized String getCurrentTimeStamp(String timeStampFormat,String... timeZone ){ // tested OK
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         libraryLoggingUtils = new LibraryLoggingUtils();
         String formattedTimeStamp=null;
@@ -54,8 +45,7 @@ public class CommonMethods {
      * @param userProvidedStartDate This is the optional date for subtracting/adding days from/to ( Eg: 2024-08-08 ).
      * @return formattedTimeStamp This is the formatted timestamp as per the user defined format.
      */
-    public synchronized String getFutureTimeStamp(String timeStampFormat,int numberOfDaysToBeAltered,String... userProvidedStartDate) // tested OK
-    {
+    public synchronized String getFutureTimeStamp(String timeStampFormat,int numberOfDaysToBeAltered,String... userProvidedStartDate) {// tested OK
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         libraryLoggingUtils = new LibraryLoggingUtils();
         String formattedTimeStamp=null;
@@ -96,8 +86,7 @@ public class CommonMethods {
      * generateRandomGuid method is used to generate a random HEXADECIMAL string.
      * @return guid This is the HEXADECIMAL string.
      */
-    public synchronized String generateRandomGuid() // tested OK
-    {
+    public synchronized String generateRandomGuid(){ // tested OK
         String methodName = Thread.currentThread().getStackTrace()[1].getMethodName();
         libraryLoggingUtils = new LibraryLoggingUtils();
         String guid = null;
@@ -110,6 +99,7 @@ public class CommonMethods {
 
         return guid;
     }
+
 
 
 }
